@@ -1,0 +1,122 @@
+openapi: 3.0.0
+info:
+  description: "This is a sample facilities API for IHIS"
+  version: "1.0.0"
+  title: "IHIS Facilities Manager"
+
+
+tags:
+  - name: "facilities"
+    description: "Use this API to know about the facilities available"
+
+paths:
+  /facilities/{hci}:
+    get:
+      tags:
+        - "facilities"
+      summary: "get available facilities"
+      description: "Use this API to know about the facilities available"
+      operationId: "getFacilitiesByHCI"
+      parameters:
+        - in: path
+          name: hci
+          schema:
+            type: string
+          required: true
+          description:   facilityInfo search by HCI
+        - in: header
+          name: "MessageId"
+          description: "Request Message ID header"
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: "requestorId"
+          description: "requestorId ID header"
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FacilitiesResponse"
+        '400':
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '401':
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '404':
+          description: "Resource Not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '500':
+          description: "Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  schemas:
+    FacilitiesInnerJSON:
+      type: "object"
+      properties:
+        hci:
+          type: "string"
+        uen:
+          type: "string"
+        name:
+          type: "string"
+        address:
+          type: "string"
+        phoneNum:
+          type: "integer"
+          format: "int32"
+        status:
+          type: "string"
+          description: "Status"
+
+    ResponseHeaderInnerJSON:
+      type: "object"
+      properties:
+        MessageId:
+          type: "string"
+        Timestamp:
+          type: "string"
+        requestorId:
+          type: "string"
+        status:
+          type: "integer"
+          format: "int32"
+    ErrorResponse:
+      type: "object"
+      properties:
+        code:
+          type: "integer"
+          format: "int32"
+        message:
+            type: "string"
+    FacilitiesResponse:
+      type: "object"
+      properties:
+        responseHeader:
+          $ref: "#/components/schemas/ResponseHeaderInnerJSON"
+        facility:
+          $ref: "#/components/schemas/FacilitiesInnerJSON"
+
+
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"

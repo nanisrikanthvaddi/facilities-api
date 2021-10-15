@@ -18,4 +18,7 @@ spring:
   data:
     jpa:
       repositories:
-        bootstrap-mode: default
+        bootstrap-mode: 
+        
+server:
+  port: 9007

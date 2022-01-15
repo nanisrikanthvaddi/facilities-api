@@ -19,6 +19,19 @@ public class FacilitiesResponse   {
   @JsonProperty("facility")
   private FacilitiesInnerJSON facility;
 
+
+  public String getLogo() {
+    return logo;
+  }
+
+  public void setLogo(String logo) {
+    this.logo = logo;
+  }
+
+  @JsonProperty("logo")
+  private String logo;
+
+
   public FacilitiesResponse responseHeader(ResponseHeaderInnerJSON responseHeader) {
     this.responseHeader = responseHeader;
     return this;

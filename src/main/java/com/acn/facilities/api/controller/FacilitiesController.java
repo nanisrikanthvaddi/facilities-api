@@ -8,13 +8,21 @@ import com.acn.facilities.api.model.ResponseHeaderInnerJSON;
 import com.acn.facilities.api.repository.FacilitiesRepo;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.sql.Timestamp;
+import java.util.Base64;
 import java.util.Optional;
 
 
@@ -25,6 +33,33 @@ public class FacilitiesController implements FacilitiesApi{
 
     @Autowired
     FacilitiesRepo facilitiesRepo;
+
+    private String logo;
+
+
+
+    @PostConstruct
+    public void init() throws IOException {
+
+        try {
+
+            File resource = new ClassPathResource("IHIS.png").getFile();
+            String text = new String(Files.readAllBytes(resource.toPath()));
+
+
+            byte[] encoded = Base64.getEncoder().encode(text.getBytes(StandardCharsets.UTF_8));
+            logo = new String(encoded,StandardCharsets.US_ASCII);
+            System.out.println(logo);
+
+        } catch (FileNotFoundException e) {
+
+            e.printStackTrace();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+
+    }
 
     @Override
     @RequestMapping(value = "/getFacilities/{hci}",
@@ -38,6 +73,7 @@ public class FacilitiesController implements FacilitiesApi{
         Optional<FacilitiesInnerJSON> facility = facilitiesRepo.findById(hci);
         if (facility.isPresent()) {
             FacilitiesResponse fp = new FacilitiesResponse();
+            fp.setLogo(logo);
             ResponseHeaderInnerJSON rps = new ResponseHeaderInnerJSON();
             rps.setMessageId(messageId);
             rps.setTimestamp((new Timestamp(System.currentTimeMillis())).toString());

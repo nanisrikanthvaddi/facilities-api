@@ -1,5 +1,6 @@
 
 
+
 insert into Facilities values ('100000','198703907Z','Singapore General Hospital','10 Outram Road Singapore 169608', '62738913',  'Active');
 
 
